@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 750px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 750px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ffe119", "font": {"color": "black"}, "id": "Brazil", "label": "Brazil", "shape": "dot", "title": "Brazil"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "China", "label": "China", "shape": "dot", "title": "China"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Austria", "label": "Austria", "shape": "dot", "title": "Austria"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Germany", "label": "Germany", "shape": "dot", "title": "Germany"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Japan", "label": "Japan", "shape": "dot", "title": "Japan"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Afghanistan", "label": "Afghanistan", "shape": "dot", "title": "Afghanistan"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Iran", "label": "Iran", "shape": "dot", "title": "Iran"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Poland", "label": "Poland", "shape": "dot", "title": "Poland"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Italy", "label": "Italy", "shape": "dot", "title": "Italy"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Northern Ireland", "label": "Northern Ireland", "shape": "dot", "title": "Northern Ireland"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Hungary", "label": "Hungary", "shape": "dot", "title": "Hungary"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "France", "label": "France", "shape": "dot", "title": "France"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Nicaragua", "label": "Nicaragua", "shape": "dot", "title": "Nicaragua"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "United States", "label": "United States", "shape": "dot", "title": "United States"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Hong Kong", "label": "Hong Kong", "shape": "dot", "title": "Hong Kong"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Morocco", "label": "Morocco", "shape": "dot", "title": "Morocco"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Indonesia", "label": "Indonesia", "shape": "dot", "title": "Indonesia"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Malaysia", "label": "Malaysia", "shape": "dot", "title": "Malaysia"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Israel", "label": "Israel", "shape": "dot", "title": "Israel"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Palestine", "label": "Palestine", "shape": "dot", "title": "Palestine"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Tunisia", "label": "Tunisia", "shape": "dot", "title": "Tunisia"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Denmark", "label": "Denmark", "shape": "dot", "title": "Denmark"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Norway", "label": "Norway", "shape": "dot", "title": "Norway"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Bangladesh", "label": "Bangladesh", "shape": "dot", "title": "Bangladesh"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Pakistan", "label": "Pakistan", "shape": "dot", "title": "Pakistan"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Lebanon", "label": "Lebanon", "shape": "dot", "title": "Lebanon"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Portugal", "label": "Portugal", "shape": "dot", "title": "Portugal"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Spain", "label": "Spain", "shape": "dot", "title": "Spain"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Kenya", "label": "Kenya", "shape": "dot", "title": "Kenya"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Uganda", "label": "Uganda", "shape": "dot", "title": "Uganda"}, {"color": "#46f0f0", "font": {"color": "black"}, "id": "Greece", "label": "Greece", "shape": "dot", "title": "Greece"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "South Africa", "label": "South Africa", "shape": "dot", "title": "South Africa"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Russia", "label": "Russia", "shape": "dot", "title": "Russia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Lithuania", "label": "Lithuania", "shape": "dot", "title": "Lithuania"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "South Korea", "label": "South Korea", "shape": "dot", "title": "South Korea"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Haiti", "label": "Haiti", "shape": "dot", "title": "Haiti"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Brunei", "label": "Brunei", "shape": "dot", "title": "Brunei"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "India", "label": "India", "shape": "dot", "title": "India"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Egypt", "label": "Egypt", "shape": "dot", "title": "Egypt"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Philippines", "label": "Philippines", "shape": "dot", "title": "Philippines"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Chile", "label": "Chile", "shape": "dot", "title": "Chile"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Cuba", "label": "Cuba", "shape": "dot", "title": "Cuba"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Argentina", "label": "Argentina", "shape": "dot", "title": "Argentina"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Malta", "label": "Malta", "shape": "dot", "title": "Malta"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Colombia", "label": "Colombia", "shape": "dot", "title": "Colombia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Mexico", "label": "Mexico", "shape": "dot", "title": "Mexico"}, {"color": "#46f0f0", "font": {"color": "black"}, "id": "Armenia", "label": "Armenia", "shape": "dot", "title": "Armenia"}, {"color": "#46f0f0", "font": {"color": "black"}, "id": "Azerbaijan", "label": "Azerbaijan", "shape": "dot", "title": "Azerbaijan"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Belgium", "label": "Belgium", "shape": "dot", "title": "Belgium"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Netherlands", "label": "Netherlands", "shape": "dot", "title": "Netherlands"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Georgia", "label": "Georgia", "shape": "dot", "title": "Georgia"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Ethiopia", "label": "Ethiopia", "shape": "dot", "title": "Ethiopia"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Ireland", "label": "Ireland", "shape": "dot", "title": "Ireland"}, {"color": "#f032e6", "font": {"color": "black"}, "id": "Costa Rica", "label": "Costa Rica", "shape": "dot", "title": "Costa Rica"}, {"color": "#f032e6", "font": {"color": "black"}, "id": "Guatemala", "label": "Guatemala", "shape": "dot", "title": "Guatemala"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Bahamas", "label": "Bahamas", "shape": "dot", "title": "Bahamas"}, {"color": "#f032e6", "font": {"color": "black"}, "id": "El Salvador", "label": "El Salvador", "shape": "dot", "title": "El Salvador"}, {"color": "#f032e6", "font": {"color": "black"}, "id": "Honduras", "label": "Honduras", "shape": "dot", "title": "Honduras"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Namibia", "label": "Namibia", "shape": "dot", "title": "Namibia"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Libya", "label": "Libya", "shape": "dot", "title": "Libya"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Sweden", "label": "Sweden", "shape": "dot", "title": "Sweden"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Jordan", "label": "Jordan", "shape": "dot", "title": "Jordan"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "United Kingdom", "label": "United Kingdom", "shape": "dot", "title": "United Kingdom"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Djibouti", "label": "Djibouti", "shape": "dot", "title": "Djibouti"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Somalia", "label": "Somalia", "shape": "dot", "title": "Somalia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Ukraine", "label": "Ukraine", "shape": "dot", "title": "Ukraine"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Tanzania", "label": "Tanzania", "shape": "dot", "title": "Tanzania"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Switzerland", "label": "Switzerland", "shape": "dot", "title": "Switzerland"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Finland", "label": "Finland", "shape": "dot", "title": "Finland"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Venezuela", "label": "Venezuela", "shape": "dot", "title": "Venezuela"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Sudan", "label": "Sudan", "shape": "dot", "title": "Sudan"}, {"color": "#46f0f0", "font": {"color": "black"}, "id": "Peru", "label": "Peru", "shape": "dot", "title": "Peru"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Cambodia", "label": "Cambodia", "shape": "dot", "title": "Cambodia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Zimbabwe", "label": "Zimbabwe", "shape": "dot", "title": "Zimbabwe"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Canada", "label": "Canada", "shape": "dot", "title": "Canada"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Syria", "label": "Syria", "shape": "dot", "title": "Syria"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Angola", "label": "Angola", "shape": "dot", "title": "Angola"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Kazakhstan", "label": "Kazakhstan", "shape": "dot", "title": "Kazakhstan"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Australia", "label": "Australia", "shape": "dot", "title": "Australia"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Taiwan", "label": "Taiwan", "shape": "dot", "title": "Taiwan"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "North Korea", "label": "North Korea", "shape": "dot", "title": "North Korea"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Palau", "label": "Palau", "shape": "dot", "title": "Palau"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Iceland", "label": "Iceland", "shape": "dot", "title": "Iceland"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Bulgaria", "label": "Bulgaria", "shape": "dot", "title": "Bulgaria"}, {"color": "#46f0f0", "font": {"color": "black"}, "id": "Scotland", "label": "Scotland", "shape": "dot", "title": "Scotland"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Panama", "label": "Panama", "shape": "dot", "title": "Panama"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Romania", "label": "Romania", "shape": "dot", "title": "Romania"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Slovenia", "label": "Slovenia", "shape": "dot", "title": "Slovenia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Albania", "label": "Albania", "shape": "dot", "title": "Albania"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Estonia", "label": "Estonia", "shape": "dot", "title": "Estonia"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Slovakia", "label": "Slovakia", "shape": "dot", "title": "Slovakia"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Eritrea", "label": "Eritrea", "shape": "dot", "title": "Eritrea"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Yemen", "label": "Yemen", "shape": "dot", "title": "Yemen"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Saudi Arabia", "label": "Saudi Arabia", "shape": "dot", "title": "Saudi Arabia"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Bolivia", "label": "Bolivia", "shape": "dot", "title": "Bolivia"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Serbia", "label": "Serbia", "shape": "dot", "title": "Serbia"}, {"color": "#e6194b", "font": {"color": "black"}, "id": "Montenegro", "label": "Montenegro", "shape": "dot", "title": "Montenegro"}, {"color": "#3cb44b", "font": {"color": "black"}, "id": "Ghana", "label": "Ghana", "shape": "dot", "title": "Ghana"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Algeria", "label": "Algeria", "shape": "dot", "title": "Algeria"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Singapore", "label": "Singapore", "shape": "dot", "title": "Singapore"}, {"color": "#911eb4", "font": {"color": "black"}, "id": "Botswana", "label": "Botswana", "shape": "dot", "title": "Botswana"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Nigeria", "label": "Nigeria", "shape": "dot", "title": "Nigeria"}, {"color": "#f58231", "font": {"color": "black"}, "id": "Barbados", "label": "Barbados", "shape": "dot", "title": "Barbados"}, {"color": "#4363d8", "font": {"color": "black"}, "id": "Thailand", "label": "Thailand", "shape": "dot", "title": "Thailand"}, {"color": "#ffe119", "font": {"color": "black"}, "id": "Sri Lanka", "label": "Sri Lanka", "shape": "dot", "title": "Sri Lanka"}]);
+                  edges = new vis.DataSet([{"from": "Brazil", "to": "China", "value": 20}, {"from": "Brazil", "to": "Ethiopia", "value": 4}, {"from": "Brazil", "to": "Iran", "value": 4}, {"from": "Brazil", "to": "North Korea", "value": 4}, {"from": "Brazil", "to": "Angola", "value": 4}, {"from": "Brazil", "to": "Poland", "value": 4}, {"from": "Brazil", "to": "Panama", "value": 4}, {"from": "Brazil", "to": "South Africa", "value": 4}, {"from": "Brazil", "to": "Bahamas", "value": 4}, {"from": "Brazil", "to": "India", "value": 4}, {"from": "Brazil", "to": "Switzerland", "value": 4}, {"from": "Brazil", "to": "Ghana", "value": 4}, {"from": "Brazil", "to": "Chile", "value": 4}, {"from": "Brazil", "to": "Tanzania", "value": 4}, {"from": "Brazil", "to": "Malta", "value": 4}, {"from": "Brazil", "to": "Singapore", "value": 4}, {"from": "Brazil", "to": "Indonesia", "value": 4}, {"from": "Brazil", "to": "Jordan", "value": 4}, {"from": "China", "to": "Japan", "value": 13}, {"from": "China", "to": "Hong Kong", "value": 10}, {"from": "China", "to": "Greece", "value": 8}, {"from": "China", "to": "Portugal", "value": 8}, {"from": "China", "to": "Indonesia", "value": 8}, {"from": "China", "to": "Russia", "value": 8}, {"from": "China", "to": "India", "value": 8}, {"from": "China", "to": "Israel", "value": 8}, {"from": "China", "to": "France", "value": 8}, {"from": "China", "to": "Malta", "value": 8}, {"from": "China", "to": "United States", "value": 8}, {"from": "China", "to": "Italy", "value": 8}, {"from": "China", "to": "Ireland", "value": 4}, {"from": "China", "to": "Afghanistan", "value": 4}, {"from": "China", "to": "Zimbabwe", "value": 4}, {"from": "China", "to": "Sudan", "value": 4}, {"from": "China", "to": "Egypt", "value": 4}, {"from": "China", "to": "Germany", "value": 4}, {"from": "China", "to": "Palau", "value": 4}, {"from": "China", "to": "Mexico", "value": 4}, {"from": "China", "to": "Bulgaria", "value": 4}, {"from": "China", "to": "Albania", "value": 4}, {"from": "China", "to": "Hungary", "value": 4}, {"from": "China", "to": "Morocco", "value": 4}, {"from": "China", "to": "Nicaragua", "value": 4}, {"from": "China", "to": "Austria", "value": 4}, {"from": "China", "to": "Ghana", "value": 4}, {"from": "China", "to": "Algeria", "value": 4}, {"from": "China", "to": "Palestine", "value": 4}, {"from": "China", "to": "Cuba", "value": 3}, {"from": "China", "to": "South Africa", "value": 2}, {"from": "Austria", "to": "Germany", "value": 17}, {"from": "Austria", "to": "Hungary", "value": 10}, {"from": "Austria", "to": "Finland", "value": 5}, {"from": "Austria", "to": "Israel", "value": 4}, {"from": "Austria", "to": "Japan", "value": 4}, {"from": "Austria", "to": "Ireland", "value": 4}, {"from": "Austria", "to": "Haiti", "value": 4}, {"from": "Germany", "to": "Japan", "value": 12}, {"from": "Germany", "to": "France", "value": 10}, {"from": "Germany", "to": "Italy", "value": 9}, {"from": "Germany", "to": "Haiti", "value": 8}, {"from": "Germany", "to": "Spain", "value": 8}, {"from": "Germany", "to": "Namibia", "value": 5}, {"from": "Germany", "to": "Switzerland", "value": 5}, {"from": "Germany", "to": "Yemen", "value": 4}, {"from": "Germany", "to": "Palestine", "value": 4}, {"from": "Germany", "to": "India", "value": 4}, {"from": "Germany", "to": "Australia", "value": 4}, {"from": "Germany", "to": "Azerbaijan", "value": 4}, {"from": "Germany", "to": "Cuba", "value": 4}, {"from": "Germany", "to": "United Kingdom", "value": 4}, {"from": "Germany", "to": "Ireland", "value": 4}, {"from": "Germany", "to": "Nicaragua", "value": 4}, {"from": "Germany", "to": "Bolivia", "value": 4}, {"from": "Germany", "to": "Hong Kong", "value": 4}, {"from": "Germany", "to": "Poland", "value": 4}, {"from": "Japan", "to": "Uganda", "value": 8}, {"from": "Japan", "to": "France", "value": 8}, {"from": "Japan", "to": "South Africa", "value": 8}, {"from": "Japan", "to": "Afghanistan", "value": 8}, {"from": "Japan", "to": "Jordan", "value": 4}, {"from": "Japan", "to": "Sweden", "value": 4}, {"from": "Japan", "to": "Kazakhstan", "value": 4}, {"from": "Japan", "to": "Taiwan", "value": 4}, {"from": "Japan", "to": "Russia", "value": 4}, {"from": "Japan", "to": "Scotland", "value": 4}, {"from": "Japan", "to": "Libya", "value": 4}, {"from": "Japan", "to": "Greece", "value": 4}, {"from": "Japan", "to": "Ireland", "value": 4}, {"from": "Japan", "to": "Italy", "value": 4}, {"from": "Japan", "to": "Romania", "value": 4}, {"from": "Japan", "to": "United States", "value": 4}, {"from": "Japan", "to": "Sudan", "value": 4}, {"from": "Japan", "to": "Cambodia", "value": 4}, {"from": "Japan", "to": "Kenya", "value": 4}, {"from": "Japan", "to": "Switzerland", "value": 4}, {"from": "Japan", "to": "South Korea", "value": 4}, {"from": "Afghanistan", "to": "Iran", "value": 13}, {"from": "Afghanistan", "to": "Israel", "value": 8}, {"from": "Afghanistan", "to": "Australia", "value": 4}, {"from": "Afghanistan", "to": "Bulgaria", "value": 4}, {"from": "Iran", "to": "Poland", "value": 12}, {"from": "Iran", "to": "South Korea", "value": 8}, {"from": "Iran", "to": "Russia", "value": 5}, {"from": "Iran", "to": "Colombia", "value": 4}, {"from": "Iran", "to": "Ukraine", "value": 4}, {"from": "Iran", "to": "Peru", "value": 4}, {"from": "Iran", "to": "Greece", "value": 4}, {"from": "Iran", "to": "Denmark", "value": 4}, {"from": "Iran", "to": "Taiwan", "value": 4}, {"from": "Iran", "to": "Chile", "value": 4}, {"from": "Iran", "to": "Israel", "value": 4}, {"from": "Iran", "to": "Georgia", "value": 4}, {"from": "Iran", "to": "Egypt", "value": 4}, {"from": "Iran", "to": "Bolivia", "value": 4}, {"from": "Iran", "to": "Philippines", "value": 4}, {"from": "Iran", "to": "Cambodia", "value": 4}, {"from": "Iran", "to": "Kenya", "value": 4}, {"from": "Poland", "to": "Canada", "value": 4}, {"from": "Poland", "to": "Syria", "value": 4}, {"from": "Poland", "to": "Cambodia", "value": 4}, {"from": "Poland", "to": "Uganda", "value": 4}, {"from": "Poland", "to": "Costa Rica", "value": 4}, {"from": "Poland", "to": "Northern Ireland", "value": 4}, {"from": "Poland", "to": "Georgia", "value": 4}, {"from": "Poland", "to": "Portugal", "value": 4}, {"from": "Poland", "to": "France", "value": 4}, {"from": "Italy", "to": "Northern Ireland", "value": 12}, {"from": "Italy", "to": "Ethiopia", "value": 5}, {"from": "Italy", "to": "Libya", "value": 5}, {"from": "Italy", "to": "United States", "value": 5}, {"from": "Italy", "to": "Venezuela", "value": 5}, {"from": "Italy", "to": "Egypt", "value": 4}, {"from": "Italy", "to": "South Korea", "value": 4}, {"from": "Italy", "to": "India", "value": 4}, {"from": "Italy", "to": "Finland", "value": 4}, {"from": "Italy", "to": "Jordan", "value": 4}, {"from": "Italy", "to": "Thailand", "value": 4}, {"from": "Northern Ireland", "to": "Ireland", "value": 5}, {"from": "Northern Ireland", "to": "Indonesia", "value": 4}, {"from": "Northern Ireland", "to": "Bangladesh", "value": 4}, {"from": "Northern Ireland", "to": "Jordan", "value": 4}, {"from": "Northern Ireland", "to": "Saudi Arabia", "value": 4}, {"from": "Northern Ireland", "to": "Hong Kong", "value": 4}, {"from": "Hungary", "to": "Russia", "value": 4}, {"from": "France", "to": "Morocco", "value": 10}, {"from": "France", "to": "Tunisia", "value": 10}, {"from": "France", "to": "United States", "value": 8}, {"from": "France", "to": "Lebanon", "value": 8}, {"from": "France", "to": "Netherlands", "value": 5}, {"from": "France", "to": "Denmark", "value": 5}, {"from": "France", "to": "Djibouti", "value": 5}, {"from": "France", "to": "Somalia", "value": 4}, {"from": "France", "to": "Greece", "value": 4}, {"from": "France", "to": "Georgia", "value": 4}, {"from": "France", "to": "Panama", "value": 4}, {"from": "France", "to": "Russia", "value": 4}, {"from": "France", "to": "Norway", "value": 4}, {"from": "France", "to": "Chile", "value": 4}, {"from": "France", "to": "South Korea", "value": 4}, {"from": "France", "to": "Libya", "value": 4}, {"from": "France", "to": "Pakistan", "value": 4}, {"from": "Nicaragua", "to": "United States", "value": 10}, {"from": "United States", "to": "Cuba", "value": 5}, {"from": "United States", "to": "Egypt", "value": 4}, {"from": "United States", "to": "Venezuela", "value": 4}, {"from": "United States", "to": "Russia", "value": 4}, {"from": "United States", "to": "Sweden", "value": 4}, {"from": "United States", "to": "Chile", "value": 4}, {"from": "Hong Kong", "to": "India", "value": 4}, {"from": "Hong Kong", "to": "Peru", "value": 4}, {"from": "Morocco", "to": "Sudan", "value": 4}, {"from": "Indonesia", "to": "Malaysia", "value": 10}, {"from": "Indonesia", "to": "Philippines", "value": 4}, {"from": "Indonesia", "to": "Yemen", "value": 4}, {"from": "Indonesia", "to": "Singapore", "value": 4}, {"from": "Indonesia", "to": "Finland", "value": 4}, {"from": "Malaysia", "to": "Kenya", "value": 9}, {"from": "Malaysia", "to": "Tanzania", "value": 4}, {"from": "Malaysia", "to": "Botswana", "value": 4}, {"from": "Israel", "to": "Palestine", "value": 10}, {"from": "Israel", "to": "Lebanon", "value": 9}, {"from": "Israel", "to": "Jordan", "value": 5}, {"from": "Israel", "to": "Egypt", "value": 5}, {"from": "Israel", "to": "Ethiopia", "value": 4}, {"from": "Israel", "to": "Syria", "value": 4}, {"from": "Israel", "to": "Taiwan", "value": 4}, {"from": "Israel", "to": "Slovenia", "value": 4}, {"from": "Israel", "to": "Eritrea", "value": 4}, {"from": "Israel", "to": "Botswana", "value": 4}, {"from": "Israel", "to": "Nigeria", "value": 4}, {"from": "Israel", "to": "Switzerland", "value": 4}, {"from": "Israel", "to": "South Korea", "value": 4}, {"from": "Israel", "to": "Sri Lanka", "value": 4}, {"from": "Palestine", "to": "Taiwan", "value": 4}, {"from": "Palestine", "to": "Chile", "value": 4}, {"from": "Palestine", "to": "Pakistan", "value": 4}, {"from": "Palestine", "to": "South Africa", "value": 4}, {"from": "Palestine", "to": "Denmark", "value": 4}, {"from": "Palestine", "to": "Ethiopia", "value": 4}, {"from": "Denmark", "to": "Norway", "value": 10}, {"from": "Denmark", "to": "Sweden", "value": 5}, {"from": "Denmark", "to": "Ireland", "value": 5}, {"from": "Denmark", "to": "Philippines", "value": 4}, {"from": "Denmark", "to": "Iceland", "value": 4}, {"from": "Denmark", "to": "Russia", "value": 4}, {"from": "Denmark", "to": "Finland", "value": 4}, {"from": "Denmark", "to": "Mexico", "value": 4}, {"from": "Norway", "to": "Belgium", "value": 5}, {"from": "Norway", "to": "Bahamas", "value": 5}, {"from": "Norway", "to": "Sweden", "value": 5}, {"from": "Bangladesh", "to": "Pakistan", "value": 10}, {"from": "Bangladesh", "to": "Uganda", "value": 4}, {"from": "Pakistan", "to": "India", "value": 5}, {"from": "Pakistan", "to": "Armenia", "value": 4}, {"from": "Pakistan", "to": "Philippines", "value": 4}, {"from": "Pakistan", "to": "Jordan", "value": 4}, {"from": "Pakistan", "to": "Switzerland", "value": 4}, {"from": "Pakistan", "to": "South Korea", "value": 4}, {"from": "Lebanon", "to": "Brunei", "value": 8}, {"from": "Lebanon", "to": "India", "value": 8}, {"from": "Lebanon", "to": "Argentina", "value": 8}, {"from": "Lebanon", "to": "Peru", "value": 4}, {"from": "Lebanon", "to": "Iceland", "value": 4}, {"from": "Portugal", "to": "Spain", "value": 9}, {"from": "Portugal", "to": "Ethiopia", "value": 4}, {"from": "Portugal", "to": "Colombia", "value": 4}, {"from": "Portugal", "to": "Finland", "value": 4}, {"from": "Portugal", "to": "Montenegro", "value": 4}, {"from": "Portugal", "to": "Libya", "value": 4}, {"from": "Portugal", "to": "Russia", "value": 4}, {"from": "Portugal", "to": "Canada", "value": 4}, {"from": "Spain", "to": "Philippines", "value": 4}, {"from": "Spain", "to": "Argentina", "value": 4}, {"from": "Spain", "to": "Cambodia", "value": 4}, {"from": "Spain", "to": "Uganda", "value": 4}, {"from": "Kenya", "to": "Tanzania", "value": 5}, {"from": "Kenya", "to": "Russia", "value": 4}, {"from": "Uganda", "to": "Egypt", "value": 8}, {"from": "Uganda", "to": "South Korea", "value": 4}, {"from": "Uganda", "to": "South Africa", "value": 4}, {"from": "Uganda", "to": "Russia", "value": 4}, {"from": "Greece", "to": "Peru", "value": 4}, {"from": "Greece", "to": "Armenia", "value": 4}, {"from": "Greece", "to": "Russia", "value": 4}, {"from": "South Africa", "to": "Chile", "value": 8}, {"from": "South Africa", "to": "Argentina", "value": 4}, {"from": "South Africa", "to": "Romania", "value": 4}, {"from": "South Africa", "to": "Taiwan", "value": 4}, {"from": "South Africa", "to": "India", "value": 1}, {"from": "Russia", "to": "Lithuania", "value": 8}, {"from": "Russia", "to": "Georgia", "value": 5}, {"from": "Russia", "to": "Ukraine", "value": 5}, {"from": "Russia", "to": "Philippines", "value": 4}, {"from": "Russia", "to": "India", "value": 4}, {"from": "Russia", "to": "Namibia", "value": 4}, {"from": "Russia", "to": "Finland", "value": 4}, {"from": "Russia", "to": "Mexico", "value": 4}, {"from": "Russia", "to": "Yemen", "value": 4}, {"from": "Russia", "to": "Azerbaijan", "value": 4}, {"from": "Russia", "to": "Serbia", "value": 4}, {"from": "Russia", "to": "Panama", "value": 4}, {"from": "Russia", "to": "Sweden", "value": 4}, {"from": "Russia", "to": "Cuba", "value": 4}, {"from": "Russia", "to": "Romania", "value": 4}, {"from": "South Korea", "to": "Angola", "value": 4}, {"from": "South Korea", "to": "Kazakhstan", "value": 4}, {"from": "South Korea", "to": "Australia", "value": 4}, {"from": "South Korea", "to": "North Korea", "value": 4}, {"from": "South Korea", "to": "Taiwan", "value": 4}, {"from": "South Korea", "to": "Sri Lanka", "value": 4}, {"from": "Haiti", "to": "Egypt", "value": 4}, {"from": "India", "to": "Philippines", "value": 8}, {"from": "India", "to": "Finland", "value": 4}, {"from": "India", "to": "Argentina", "value": 4}, {"from": "India", "to": "Slovakia", "value": 4}, {"from": "India", "to": "Eritrea", "value": 4}, {"from": "India", "to": "Estonia", "value": 4}, {"from": "India", "to": "Malta", "value": 4}, {"from": "India", "to": "Cuba", "value": 4}, {"from": "India", "to": "Montenegro", "value": 4}, {"from": "Egypt", "to": "United Kingdom", "value": 5}, {"from": "Egypt", "to": "Canada", "value": 4}, {"from": "Philippines", "to": "Sweden", "value": 4}, {"from": "Philippines", "to": "Thailand", "value": 4}, {"from": "Chile", "to": "Cuba", "value": 8}, {"from": "Chile", "to": "Bolivia", "value": 4}, {"from": "Cuba", "to": "Bahamas", "value": 4}, {"from": "Argentina", "to": "Ethiopia", "value": 4}, {"from": "Colombia", "to": "Mexico", "value": 5}, {"from": "Colombia", "to": "Albania", "value": 4}, {"from": "Mexico", "to": "Albania", "value": 4}, {"from": "Mexico", "to": "Finland", "value": 4}, {"from": "Armenia", "to": "Azerbaijan", "value": 5}, {"from": "Armenia", "to": "Scotland", "value": 4}, {"from": "Azerbaijan", "to": "Estonia", "value": 4}, {"from": "Belgium", "to": "Netherlands", "value": 5}, {"from": "Ethiopia", "to": "Somalia", "value": 5}, {"from": "Ethiopia", "to": "Sudan", "value": 4}, {"from": "Costa Rica", "to": "Guatemala", "value": 5}, {"from": "Guatemala", "to": "Honduras", "value": 5}, {"from": "Bahamas", "to": "Estonia", "value": 4}, {"from": "El Salvador", "to": "Honduras", "value": 5}, {"from": "El Salvador", "to": "Libya", "value": 4}, {"from": "Libya", "to": "Sweden", "value": 4}, {"from": "Libya", "to": "Ukraine", "value": 4}, {"from": "Libya", "to": "Nigeria", "value": 4}, {"from": "Sweden", "to": "Finland", "value": 5}, {"from": "Jordan", "to": "Djibouti", "value": 4}, {"from": "Jordan", "to": "Nigeria", "value": 4}, {"from": "Jordan", "to": "Barbados", "value": 4}, {"from": "Jordan", "to": "Canada", "value": 4}, {"from": "Ukraine", "to": "Finland", "value": 4}, {"from": "Tanzania", "to": "Kazakhstan", "value": 4}, {"from": "Switzerland", "to": "North Korea", "value": 4}, {"from": "Finland", "to": "Slovenia", "value": 4}, {"from": "Finland", "to": "Canada", "value": 4}, {"from": "Venezuela", "to": "Kazakhstan", "value": 4}, {"from": "Venezuela", "to": "Serbia", "value": 4}, {"from": "Zimbabwe", "to": "Canada", "value": 4}, {"from": "Australia", "to": "Bolivia", "value": 4}, {"from": "North Korea", "to": "Palau", "value": 4}, {"from": "Panama", "to": "Romania", "value": 4}, {"from": "Albania", "to": "Saudi Arabia", "value": 4}, {"from": "Estonia", "to": "Slovakia", "value": 4}, {"from": "Yemen", "to": "Algeria", "value": 4}, {"from": "Nigeria", "to": "Barbados", "value": 4}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"forceAtlas2Based": {"gravitationalConstant": -50, "centralGravity": 0.01, "springLength": 100, "springConstant": 0.08}, "maxVelocity": 50, "solver": "forceAtlas2Based", "timestep": 0.35, "stabilization": {"iterations": 150}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
